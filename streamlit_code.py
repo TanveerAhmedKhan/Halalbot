@@ -127,12 +127,18 @@ from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationBufferMemory
 from langchain.chat_models import ChatOpenAI
 
-# Load API keys 
-from constants import openai_key
-from constants import org_key
+# # Load API keys 
+# from constants import openai_key
+# from constants import org_key
+# import openai
+# openai.organization = org_key
+# openai.api_key = openai_key
+
 import openai
-openai.organization = org_key
-openai.api_key = openai_key
+openai.api_key = st.secrets['openai_key']
+openai.organization = st.secrets['org_key']
+
+
 
 # Define the function to process each file
 def process_file(file_path):
