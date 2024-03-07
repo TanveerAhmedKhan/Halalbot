@@ -184,7 +184,7 @@ if user_input and report_db:
         input_variables=["chat_history", "human_input", "context"], template=template
     )
     memory_report = ConversationBufferMemory(memory_key="chat_history", input_key="human_input", max_history=2)
-    chain_report = load_qa_chain(ChatOpenAI(model_name="gpt-4-0125-previe", temperature=0, max_tokens=2000,openai_api_key=openai.api_key), verbose=True, chain_type="stuff", memory=memory_report, prompt=prompt)
+    chain_report = load_qa_chain(ChatOpenAI(model_name="gpt-4-0125-preview", temperature=0, max_tokens=2000,openai_api_key=openai.api_key), verbose=True, chain_type="stuff", memory=memory_report, prompt=prompt)
     output = chain_report({"input_documents": [docs[0]], "human_input": user_input}, return_only_outputs=False)
     st.write(output['output_text'])
 else:
