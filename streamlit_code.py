@@ -127,12 +127,18 @@ from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationBufferMemory
 from langchain.chat_models import ChatOpenAI
 
-# Load API keys 
-from constants import openai_key
-from constants import org_key
+# # Load API keys 
+# from constants import openai_key
+# from constants import org_key
+# import openai
+# openai.organization = org_key
+# openai.api_key = openai_key
+
 import openai
-openai.organization = org_key
-openai.api_key = openai_key
+openai.api_key = st.secrets['openai_key']
+openai.organization = st.secrets['org_key']
+
+
 
 # Define the function to process each file
 def process_file(file_path):
@@ -172,12 +178,13 @@ user_input = st.text_input("Ask me about crypto protocols:")
 if user_input and report_db:
     # Perform search and response generation
     docs = report_db.similarity_search(user_input, k=3)
-    template = """Please provide accurate and intelligent responses to our clients as a virtual assistant specializing in Crypto Currencies. Begin the conversation with a friendly greeting. When discussing information or providing recommendations about Crypto Currencies, make sure to use accurate information from the knowledge base provided in {context}. If a question is asked that is not related to Crypto Currencies or falls outside the scope of this document, kindly reply with the response, "I'm sorry, but the available information is limited as I am an AI assistant." Please refer to the chat history in {chat_history} and respond to the human input as follows: "Human: {human_input} Virtual Assistant:"""
+    #template = """Please provide accurate and intelligent responses to our clients as a virtual assistant specializing in Crypto Currencies. Begin the conversation with a friendly greeting. When discussing information or providing recommendations about Crypto Currencies, make sure to use accurate information from the knowledge base provided in {context}. If a question is asked that is not related to Crypto Currencies or falls outside the scope of this document, kindly reply with the response, "I'm sorry, but the available information is limited as I am an AI assistant." Please refer to the chat history in {chat_history} and respond to the human input as follows: "Human: {human_input} Virtual Assistant:"""
+    template = "You are my Virtual Assistant specializing in Crypto Currencies.\n\n Instructions for Virtual Assistant specializing in Crypto Currencies:\n\n- Begin the conversation with a friendly greeting.\n- Use only information from the knowledge base provided in {context}.\n- If a question is asked that is not related to Crypto Currencies or falls outside the scope of this document, reply with \"I'm sorry, but the available information is limited as I am an AI assistant.\"\n- Refer to the chat history in {chat_history} and respond to the human input as follows: \n   \"Human: {human_input} \n    Virtual Assistant:\" \n\nIt is important to note that the bot DOES NOT makeup answers and only provides information from the context provided. And when user greetings the bot like 'Hi', etc. Then it must reply the greetings professionally."
     prompt = PromptTemplate(
         input_variables=["chat_history", "human_input", "context"], template=template
     )
     memory_report = ConversationBufferMemory(memory_key="chat_history", input_key="human_input", max_history=2)
-    chain_report = load_qa_chain(ChatOpenAI(model_name="gpt-4", temperature=0, max_tokens=2000,openai_api_key=openai.api_key), verbose=True, chain_type="stuff", memory=memory_report, prompt=prompt)
+    chain_report = load_qa_chain(ChatOpenAI(model_name="gpt-4-0125-preview", temperature=0, max_tokens=2000,openai_api_key=openai.api_key), verbose=True, chain_type="stuff", memory=memory_report, prompt=prompt)
     output = chain_report({"input_documents": [docs[0]], "human_input": user_input}, return_only_outputs=False)
     st.write(output['output_text'])
 else:
