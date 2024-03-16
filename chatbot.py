@@ -63,12 +63,12 @@ def process_file(file_path):
     return protocols
 
 
-def crypto_chatbot():
+def crypto_chatbot(user_input):
     embeddings = OpenAIEmbeddings(model='text-embedding-3-small', openai_api_key=openai.api_key)
     report_db = FAISS.load_local("faiss_index_report", embeddings)
 
     print("Crypto Chatbot")
-    user_input = input("Ask me about crypto protocols: ")
+    user_input = user_input
 
     if user_input and report_db:
         docs = report_db.similarity_search(user_input, k=3)
@@ -101,7 +101,8 @@ def main():
 
     # Here you can call any functions you need to run when the script starts
     # For example, to run the chatbot:
-    response = crypto_chatbot()
+    user_input = input("Ask me about crypto protocols: ")
+    response = crypto_chatbot(user_input)
     print(response)
 
 if __name__ == "__main__":
