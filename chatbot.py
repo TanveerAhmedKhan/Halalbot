@@ -15,7 +15,7 @@ from langchain.chat_models import ChatOpenAI
 # Assuming .env file exists and has OPENAI_KEY and ORG_KEY
 load_dotenv()
 openai.api_key = os.getenv('OPENAI_KEY')
-openai.organization = os.getenv('ORG_KEY')
+# openai.organization = os.getenv('ORG_KEY')
 
 # Define the function to process each file
 def process_file(file_path):
@@ -42,7 +42,7 @@ def process_file(file_path):
 
 # Initialize embeddings and vector store
 embeddings = OpenAIEmbeddings(model='text-embedding-3-small', openai_api_key=openai.api_key)
-report_db = FAISS.load_local("faiss_index_report", embeddings)
+report_db = FAISS.load_local("/home/mohsin/work projects/Halalbot/faiss_index_report", embeddings)
 
 # Console interface (replacing Streamlit UI)
 print("Crypto Chatbot")
