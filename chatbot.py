@@ -11,6 +11,10 @@ from langchain.llms import OpenAI
 from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationBufferMemory
 from langchain.chat_models import ChatOpenAI
+import warnings
+
+warnings.filterwarnings("ignore")
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # Assuming .env file exists and has OPENAI_KEY and ORG_KEY
 load_dotenv()
@@ -92,27 +96,27 @@ def crypto_chatbot(user_input):
             prompt = PromptTemplate(input_variables=["chat_history", "human_input", "context"], template=template)
             memory_report = ConversationBufferMemory(memory_key="chat_history", input_key="human_input", max_history=2)
             chain_report = load_qa_chain(ChatOpenAI(model_name="gpt-4-0125-preview", temperature=0, max_tokens=2000,
-                                                    openai_api_key=openai.api_key), verbose=True, chain_type="stuff",
+                                                    openai_api_key=openai.api_key), verbose=False, chain_type="stuff",
                                         memory=memory_report, prompt=prompt)
             output = chain_report({"input_documents": [docs[0]], "human_input": user_input}, return_only_outputs=False)
-            return output['output_text'], True
+            return {"message":output['output_text'], "success": True}
     except Exception as e:
         print(f"Error in crypto_chatbot: {e}")
-        return "An error occurred while processing your request.", False
+        return {'message':"An error occurred while processing your request.","success": False}
     
 
 
 # def main():
 #     load_dotenv()
 #     openai.api_key = os.getenv('OPENAI_KEY')
-#     openai.organization = os.getenv('ORG_KEY')
+#     # openai.organization = os.getenv('ORG_KEY')
 
 #     # Here you can call any functions you need to run when the script starts
 #     # For example, to run the chatbot:
 #     user_input = input("Ask me about crypto protocols: ")
-#     response, success = crypto_chatbot(user_input)
-#     print(success)
+#     response = crypto_chatbot(user_input)
 #     print(response)
+#     print(response["success"], response["message"])
 
 # if __name__ == "__main__":
 #     main()

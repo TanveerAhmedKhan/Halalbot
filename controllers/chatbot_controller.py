@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from ..chatbot import crypto_chatbot
+from chatbot import *
 
 class chatbotQuery(BaseModel):
     user_query: str
@@ -8,6 +8,5 @@ class chatbotQuery(BaseModel):
 router = APIRouter()
 
 @router.post("/chatbot/query")
-async def chatbotQuery(body: chatbotQuery):
-    return await crypto_chatbot(body.user_query)
-    # return await 
+def chatbotQuery(body: chatbotQuery):
+    return crypto_chatbot(body.user_query)
